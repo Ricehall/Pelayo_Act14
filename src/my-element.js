@@ -1,4 +1,5 @@
-import { LitElement, css, html } from 'lit'
+import { LitElement, css, html } from 'https://cdn.jsdelivr.net/gh/lit/dist@3/core lit-core.min.js'
+
 
 export class MyElement extends LitElement {
   static get properties() {
