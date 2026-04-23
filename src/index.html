@@ -1,12 +1,237 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AdDU Nation — Alumni Network</title>
-  </head>
-  <body>
-    <my-element></my-element>
-    <script type="module" src="./my-element.js"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#040354" />
+  <meta name="description" content="Ateneo de Davao University Alumni Network — Stay connected, give back, and grow." />
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="manifest.json" />
+
+  <!-- Apple / iOS PWA support -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="AdDU Alumni" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+
+  <title>AdDU Alumni Network</title>
+
+  <style>
+    /* App Shell styles — loaded instantly before LitElement hydrates */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      height: 100%;
+      background: #f5f6fa;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+    }
+    /* Splash / loading state before component upgrades */
+    #app-loading {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(160deg, #040354 0%, #0a0a6e 60%, #135BEC 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      z-index: 9999;
+      transition: opacity 0.4s ease;
+    }
+    #app-loading.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    #app-loading img {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      padding: 8px;
+    }
+    #app-loading p {
+      color: rgba(255,255,255,0.75);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .loading-spinner {
+      width: 28px;
+      height: 28px;
+      border: 3px solid rgba(255,255,255,0.2);
+      border-top-color: #ffffff;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Center the max-width app */
+    my-element {
+      display: block;
+      max-width: 480px;
+      margin: 0 auto;
+      min-height: 100vh;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- App Shell Loading Splash -->
+  <div id="app-loading">
+    <!-- 
+      OFFLINE-SAFE: Use a local icon. If you have the seal saved as icons/icon-192.png
+      (generated during PWA setup), this will work offline too.
+      Fallback to Wikimedia only if local icon doesn't exist yet.
+    -->
+    <img
+      src="icons/icon-192.png"
+      onerror="this.src='https://upload.wikimedia.org/wikipedia/en/thumb/4/4e/Ateneo_de_Davao_University_seal.svg/200px-Ateneo_de_Davao_University_seal.svg.png'"
+      alt="AdDU Seal"
+    />
+    <p>Ateneo de Davao University</p>
+    <div class="loading-spinner"></div>
+  </div>
+
+  <!-- LitElement App Component -->
+  <my-element></my-element>
+
+  <!-- Load LitElement app -->
+  <script type="module" src="app.js"></script>
+
+  <script>
+    // ─── SERVICE WORKER REGISTRATION ─────────────────────────────────────────
+    // Runs after page load — doesn't block first paint
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', async () => {
+        try {
+          const reg = await navigator.serviceWorker.register('/service-worker.js', {
+            scope: '/'
+          });
+
+          console.log('[AdDU PWA] Service Worker registered. Scope:', reg.scope);
+
+          // Handle SW updates — new version available
+          reg.addEventListener('updatefound', () => {
+            const newWorker = reg.installing;
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                // New content available — you can show a "Refresh to update" toast here
+                console.log('[AdDU PWA] New version available. Refresh to update.');
+                // Optional: show update banner
+                showUpdateBanner();
+              }
+            });
+          });
+
+        } catch (err) {
+          console.warn('[AdDU PWA] Service Worker registration failed:', err);
+        }
+      });
+
+      // If SW controller changes (after skipWaiting), reload the page
+      let refreshing = false;
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (!refreshing) {
+          refreshing = true;
+          window.location.reload();
+        }
+      });
+    }
+
+    // ─── HIDE LOADING SPLASH once <my-element> is defined & upgraded ─────────
+    customElements.whenDefined('my-element').then(() => {
+      // Small delay ensures first render is painted
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          const splash = document.getElementById('app-loading');
+          if (splash) splash.classList.add('hidden');
+        }, 300);
+      });
+    });
+
+    // ─── INSTALL PROMPT (Add to Home Screen) ─────────────────────────────────
+    let deferredInstallPrompt = null;
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault(); // Prevent auto-prompt
+      deferredInstallPrompt = e;
+      console.log('[AdDU PWA] Install prompt ready.');
+      showInstallBanner();
+    });
+
+    window.addEventListener('appinstalled', () => {
+      console.log('[AdDU PWA] App installed successfully.');
+      deferredInstallPrompt = null;
+      hideInstallBanner();
+    });
+
+    // ─── INSTALL BANNER UI ────────────────────────────────────────────────────
+    function showInstallBanner() {
+      const existing = document.getElementById('pwa-install-banner');
+      if (existing) return;
+
+      const banner = document.createElement('div');
+      banner.id = 'pwa-install-banner';
+      banner.style.cssText = `
+        position: fixed; bottom: 70px; left: 50%; transform: translateX(-50%);
+        width: calc(100% - 32px); max-width: 448px;
+        background: #040354; color: #fff;
+        border-radius: 14px; padding: 14px 16px;
+        display: flex; align-items: center; justify-content: space-between;
+        box-shadow: 0 8px 32px rgba(4,3,84,0.35);
+        z-index: 50; font-family: 'Segoe UI', system-ui, sans-serif;
+        animation: slideUp 0.3s ease;
+      `;
+      banner.innerHTML = `
+        <style>
+          @keyframes slideUp { from { transform: translateX(-50%) translateY(20px); opacity:0; } to { transform: translateX(-50%) translateY(0); opacity:1; } }
+        </style>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <img src="icons/icon-192.png" onerror="this.style.display='none'" style="width:36px;height:36px;border-radius:8px;" />
+          <div>
+            <p style="font-size:.82rem;font-weight:700;margin-bottom:1px;">Install AdDU Alumni</p>
+            <p style="font-size:.68rem;color:rgba(255,255,255,.65);">Add to Home Screen for offline access</p>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;flex-shrink:0;">
+          <button id="pwa-install-btn" style="background:#135BEC;color:#fff;border:none;border-radius:8px;padding:8px 14px;font-weight:700;font-size:.78rem;cursor:pointer;font-family:inherit;">Install</button>
+          <button id="pwa-dismiss-btn" style="background:rgba(255,255,255,.12);color:#fff;border:none;border-radius:8px;padding:8px 10px;font-size:.78rem;cursor:pointer;font-family:inherit;">✕</button>
+        </div>
+      `;
+
+      document.body.appendChild(banner);
+
+      document.getElementById('pwa-install-btn').addEventListener('click', async () => {
+        if (!deferredInstallPrompt) return;
+        deferredInstallPrompt.prompt();
+        const { outcome } = await deferredInstallPrompt.userChoice;
+        console.log('[AdDU PWA] Install outcome:', outcome);
+        deferredInstallPrompt = null;
+        hideInstallBanner();
+      });
+
+      document.getElementById('pwa-dismiss-btn').addEventListener('click', hideInstallBanner);
+    }
+
+    function hideInstallBanner() {
+      const banner = document.getElementById('pwa-install-banner');
+      if (banner) banner.remove();
+    }
+
+    function showUpdateBanner() {
+      const banner = document.createElement('div');
+      banner.style.cssText = `
+        position: fixed; top: 60px; left: 50%; transform: translateX(-50%);
+        background: #135BEC; color: #fff; padding: 10px 18px; border-radius: 10px;
+        font-size: .8rem; font-weight: 600; z-index: 50; cursor: pointer;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        box-shadow: 0 4px 16px rgba(19,91,236,.4);
+      `;
+      banner.textContent = '🔄 Update available — tap to refresh';
+      banner.addEventListener('click', () => window.location.reload());
+      document.body.appendChild(banner);
+    }
+  </script>
+</body>
 </html>
