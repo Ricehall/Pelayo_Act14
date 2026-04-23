@@ -1,4 +1,4 @@
-import { LitElement, css, html } from 'https://cdn.jsdelivr.net/gh/lit/dist@3/core lit-core.min.js'
+import { LitElement, css, html } from 'https://unpkg.com/lit@3/index.js?module';
 
 
 export class MyElement extends LitElement {
@@ -146,7 +146,6 @@ export class MyElement extends LitElement {
     `
   }
 
-  /* ── LOGIN PAGE ─────────────────────────────────── */
   _renderLogin() {
     return html`
       <div class="login-wrap">
@@ -188,7 +187,6 @@ export class MyElement extends LitElement {
     `
   }
 
-  /* ── TOP NAV ────────────────────────────────────── */
   _renderTopNav() {
     return html`
       <nav class="top-nav">
@@ -209,7 +207,6 @@ export class MyElement extends LitElement {
     `
   }
 
-  /* ── BOTTOM NAV ─────────────────────────────────── */
   _renderBottomNav() {
     const tabs = [['home','🏠','Home'],['network','👥','Network'],['donate','💙','Donate'],['career','💼','Career'],['docs','📄','Docs']]
     return html`
@@ -223,7 +220,6 @@ export class MyElement extends LitElement {
     `
   }
 
-  /* ── HOME PAGE ──────────────────────────────────── */
   _renderHome() {
     return html`
       <div class="home-hero">
@@ -237,7 +233,6 @@ export class MyElement extends LitElement {
         </div>
         <div class="home-mascot">🧑‍💼</div>
       </div>
-
       <div class="snap-row">
         <div class="snap-card"><p class="snap-val">5</p><p class="snap-lbl">Jobs for You</p></div>
         <div class="snap-card snap-warn">
@@ -246,7 +241,6 @@ export class MyElement extends LitElement {
         </div>
         <div class="snap-card"><p class="snap-val">95%</p><p class="snap-lbl">Profile</p></div>
       </div>
-
       <div class="section">
         <p class="sec-lbl">Quick Actions</p>
         <div class="qa-grid">
@@ -257,7 +251,6 @@ export class MyElement extends LitElement {
             </button>`)}
         </div>
       </div>
-
       <div class="impact-card">
         <div class="impact-head"><p class="impact-lbl">Your Total Impact</p><span>📊</span></div>
         <p class="impact-num">15 <span class="impact-unit">Projects Funded</span></p>
@@ -266,7 +259,6 @@ export class MyElement extends LitElement {
           <div><p class="ist-val">₱2,500</p><p class="ist-lbl">Contributed</p></div>
         </div>
       </div>
-
       <div class="section">
         <div class="sec-header">
           <p class="sec-lbl">Transaction History</p>
@@ -285,7 +277,6 @@ export class MyElement extends LitElement {
             </div>
           </div>`)}
       </div>
-
       <div class="section">
         <div class="sec-header"><p class="sec-lbl">Recent Activity</p><a class="sec-link">See All</a></div>
         ${[
@@ -301,7 +292,6 @@ export class MyElement extends LitElement {
     `
   }
 
-  /* ── NETWORK PAGE ───────────────────────────────── */
   _renderNetwork() {
     return html`
       <div class="page-hero">
@@ -316,12 +306,10 @@ export class MyElement extends LitElement {
             <button class="filter-btn ${this._netFilter===id?'active':''}" @click=${()=>this._netFilter=id}>${lbl}</button>`)}
         </div>
       </div>
-
       <div class="tab-strip">
         ${['Network','Alumni','Causes','Quest','Business'].map(t=>html`
           <button class="strip-tab ${t==='Network'?'active':''}">${t}</button>`)}
       </div>
-
       <div class="section">
         <div class="sec-header">
           <p class="sec-lbl">Featured Alumni</p>
@@ -346,7 +334,6 @@ export class MyElement extends LitElement {
     `
   }
 
-  /* ── DONATE PAGE ────────────────────────────────── */
   _renderDonate() {
     const amt   = this._finalAmt
     const fee   = amt ? Math.round(amt * 0.02 * 100) / 100 : 0
@@ -362,7 +349,6 @@ export class MyElement extends LitElement {
         </div>
         <button class="campaign-btn">+ Start a Campaign</button>
       </div>
-
       <div class="section">
         <div class="sec-header">
           <p class="sec-lbl">Verified Urgent Appeals</p>
@@ -389,22 +375,18 @@ export class MyElement extends LitElement {
             </div>`
         })}
       </div>
-
       <div class="section" id="donate-anchor">
         <p class="sec-lbl">Complete Your Donation</p>
         <form id="donate-form" @submit=${this._submitDonate} novalidate>
-
           <div class="mode-toggle">
             <button type="button" class="mode-btn ${this._payMode==='one-time'?'active':''}" @click=${()=>this._payMode='one-time'}>One-time</button>
             <button type="button" class="mode-btn ${this._payMode==='recurring'?'active':''}" @click=${()=>this._payMode='recurring'}>Recurring</button>
           </div>
-
           ${this._payMode==='recurring' ? html`
             <div class="recur-grid">
               <button type="button" class="day-btn ${this._recurDay===15?'active':''}" @click=${()=>this._recurDay=15}>📅 Monthly (15th)</button>
               <button type="button" class="day-btn ${this._recurDay===30?'active':''}" @click=${()=>this._recurDay=30}>🔄 Monthly (30th)</button>
             </div>` : ''}
-
           <label class="field-lbl">Select Amount (₱)</label>
           <div class="amt-grid">
             ${this._presets.map(p=>html`
@@ -418,7 +400,6 @@ export class MyElement extends LitElement {
           </div>
           ${this._errors.amt?html`<span class="err-msg">${this._errors.amt}</span>`:''}
           <div class="divider"></div>
-
           <div class="fg">
             <label class="field-lbl" for="cause">Donate to which cause?</label>
             <select id="cause" name="cause" class="${this._errors.cause?'err':''}">
@@ -427,7 +408,6 @@ export class MyElement extends LitElement {
             </select>
             ${this._errors.cause?html`<span class="err-msg">${this._errors.cause}</span>`:''}
           </div>
-
           <div class="toggle-row">
             <label class="tog">
               <input type="checkbox" @change=${e=>this._anon=e.target.checked} />
@@ -435,7 +415,6 @@ export class MyElement extends LitElement {
             </label>
             <span class="tog-lbl">Donate anonymously</span>
           </div>
-
           ${!this._anon?html`
             <div class="row2 fg">
               <div>
@@ -460,13 +439,11 @@ export class MyElement extends LitElement {
                 <input type="tel" placeholder="09xx xxx xxxx" />
               </div>
             </div>` : ''}
-
           <div class="fg">
             <label class="field-lbl">Message (optional)</label>
             <textarea placeholder="Leave a message of hope..."></textarea>
           </div>
           <div class="divider"></div>
-
           <div class="fg">
             <label class="field-lbl">Payment Method</label>
             <div class="pay-list">
@@ -479,14 +456,12 @@ export class MyElement extends LitElement {
                 </label>`)}
             </div>
           </div>
-
           ${amt?html`
             <div class="summary">
               <div class="sum-row"><span>Donation</span><span>₱${amt.toLocaleString()}</span></div>
               <div class="sum-row"><span>Processing fee (2%)</span><span>₱${fee.toLocaleString()}</span></div>
               <div class="sum-row total"><span>Total</span><span>₱${total.toLocaleString()}</span></div>
             </div>`:''}
-
           <button type="submit" class="sub-btn" ?disabled=${this._loading}>
             ${this._loading?'Processing…':`Secure Donation${amt?' ₱'+amt.toLocaleString():''} →`}
           </button>
@@ -496,7 +471,6 @@ export class MyElement extends LitElement {
     `
   }
 
-  /* ── CAREER PAGE ────────────────────────────────── */
   _renderCareer() {
     return html`
       <div class="page-hero">
@@ -507,14 +481,12 @@ export class MyElement extends LitElement {
           <input type="text" placeholder="Search by name, year, or industry" class="search-inp" />
         </div>
       </div>
-
       <div class="tab-strip">
         ${['jobs','mentorship','workshops'].map(t=>html`
           <button class="strip-tab ${this._careerTab===t?'active':''}" @click=${()=>this._careerTab=t}>
             ${t.charAt(0).toUpperCase()+t.slice(1)}
           </button>`)}
       </div>
-
       ${this._careerTab==='jobs'?html`
         <div class="section">
           <div class="sec-header"><p class="sec-lbl">Recommended Jobs</p><a class="sec-link">View All</a></div>
@@ -546,14 +518,12 @@ export class MyElement extends LitElement {
     `
   }
 
-  /* ── DOCUMENTS PAGE ─────────────────────────────── */
   _renderDocs() {
     return html`
       <div class="page-hero">
         <h2 class="page-hero-title">Academic Records</h2>
         <p class="page-hero-sub">Manage your credentials</p>
       </div>
-
       <div class="section">
         <div class="passport-card">
           <div class="pass-head">
@@ -571,7 +541,6 @@ export class MyElement extends LitElement {
           <button class="pass-share">🔗 Share Verification Link</button>
         </div>
       </div>
-
       <div class="section">
         <div class="sec-header"><p class="sec-lbl">Document Services</p><a class="sec-link">Request History</a></div>
         ${this._docs.map(d=>html`
@@ -581,7 +550,6 @@ export class MyElement extends LitElement {
             <button class="doc-action-btn" style="color:${d.color};border-color:${d.color}">${d.status}</button>
           </div>`)}
       </div>
-
       <div class="section">
         <p class="sec-lbl">Additional Credentials</p>
         ${[{ico:'💻',t:'Advanced Data Analytics',s:'Google Course Certs',tag:'Premium'},{ico:'📊',t:'Project Management',s:'PMI Institute',tag:'Finished'}].map(c=>html`
@@ -595,7 +563,6 @@ export class MyElement extends LitElement {
     `
   }
 
-  /* ── PROFILE PAGE ───────────────────────────────── */
   _renderProfile() {
     return html`
       <div class="profile-bar">
@@ -603,7 +570,6 @@ export class MyElement extends LitElement {
         <p class="profile-title">PROFILE</p>
         <button class="settings-btn">⚙️</button>
       </div>
-
       <div class="profile-cover"></div>
       <div class="profile-info">
         <div class="profile-avatar">AJ</div>
@@ -614,7 +580,6 @@ export class MyElement extends LitElement {
           <span class="pbadge navy">Anniversary</span>
         </div>
       </div>
-
       <div class="section">
         <p class="sec-lbl">Academic Passport</p>
         <div class="passport-card">
@@ -633,7 +598,6 @@ export class MyElement extends LitElement {
           <button class="pass-share">🔗 Share Verification Link</button>
         </div>
       </div>
-
       <div class="section">
         <p class="sec-lbl">Additional Credentials</p>
         ${[{ico:'💻',t:'Advanced Data Analytics',s:'Google Course Certs',tag:'Premium'},{ico:'📊',t:'Project Management',s:'PMI Institute',tag:'Finished'}].map(c=>html`
@@ -644,14 +608,12 @@ export class MyElement extends LitElement {
           </div>`)}
         <button class="add-badge-btn">+ Add External Badge</button>
       </div>
-
       <div class="section">
         <button class="logout-btn" @click=${()=>{this._page='login';this._tab='home'}}>Log Out</button>
       </div>
     `
   }
 
-  /* ── SUCCESS MODAL ──────────────────────────────── */
   _renderSuccessModal() {
     return html`
       <div class="modal-bg" @click=${e=>e.target===e.currentTarget&&(this._showModal=false)}>
@@ -673,13 +635,10 @@ export class MyElement extends LitElement {
     `
   }
 
-  /* ── STYLES ─────────────────────────────────────── */
   static get styles() {
     return css`
       :host { display:block; font-family:'Segoe UI',system-ui,sans-serif; background:#f5f6fa; color:#040354; max-width:480px; margin:0 auto; min-height:100vh; }
       * { box-sizing:border-box; margin:0; padding:0; }
-
-      /* LOGIN */
       .login-wrap { min-height:100vh; display:flex; flex-direction:column; }
       .login-hero { background:linear-gradient(160deg,#040354 0%,#0a0a6e 60%,#135BEC 100%); padding:52px 24px 44px; text-align:center; color:#fff; }
       .seal-img { width:72px; height:72px; object-fit:contain; margin-bottom:12px; }
@@ -698,8 +657,6 @@ export class MyElement extends LitElement {
       .login-btn:disabled { background:#9ca3af; cursor:not-allowed; }
       .need-help { text-align:center; font-size:.76rem; color:#9ca3af; margin-top:14px; }
       .need-help a { color:#135BEC; font-weight:600; text-decoration:none; }
-
-      /* TOP NAV */
       .top-nav { background:#040354; padding:10px 16px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:20; }
       .nav-left { display:flex; align-items:center; gap:10px; }
       .nav-logo { width:30px; height:30px; border-radius:50%; object-fit:contain; background:#fff; padding:2px; }
@@ -708,11 +665,7 @@ export class MyElement extends LitElement {
       .nav-right { display:flex; align-items:center; gap:8px; }
       .nav-icon-btn { background:rgba(255,255,255,.12); border:none; border-radius:50%; width:32px; height:32px; cursor:pointer; font-size:.9rem; }
       .avatar-btn { width:32px; height:32px; border-radius:50%; background:#135BEC; color:#fff; border:none; font-size:.7rem; font-weight:800; cursor:pointer; }
-
-      /* PAGE */
       .page-wrap { padding-bottom:72px; }
-
-      /* SHARED */
       .section { padding:16px 16px 0; }
       .sec-lbl { font-size:.75rem; font-weight:700; color:#040354; text-transform:uppercase; letter-spacing:.04em; margin-bottom:10px; }
       .sec-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
@@ -729,8 +682,6 @@ export class MyElement extends LitElement {
       input.err,select.err { border-color:#E11D48; }
       textarea { resize:vertical; min-height:70px; }
       .empty-msg { color:#9ca3af; font-size:.85rem; padding:24px 0; text-align:center; }
-
-      /* HOME */
       .home-hero { background:linear-gradient(135deg,#040354 0%,#135BEC 100%); padding:22px 16px; display:flex; justify-content:space-between; align-items:center; }
       .home-welcome { font-size:.78rem; color:rgba(255,255,255,.7); margin-bottom:2px; }
       .home-name { font-size:1.75rem; font-weight:800; color:#fff; margin-bottom:8px; }
@@ -767,8 +718,6 @@ export class MyElement extends LitElement {
       .txn-amt { font-size:.83rem; font-weight:700; color:#040354; }
       .txn-date { font-size:.64rem; color:#9ca3af; }
       .act-row { display:flex; gap:10px; padding:10px 0; border-bottom:1px solid #f0f0f0; align-items:flex-start; }
-
-      /* NETWORK */
       .page-hero { background:linear-gradient(135deg,#040354 0%,#135BEC 100%); padding:20px 16px 22px; }
       .page-hero-title { font-size:1.2rem; font-weight:800; color:#fff; margin-bottom:2px; }
       .page-hero-sub { font-size:.76rem; color:rgba(255,255,255,.65); margin-bottom:12px; }
@@ -787,8 +736,6 @@ export class MyElement extends LitElement {
       .alumni-btns { display:flex; gap:8px; padding:8px 0; }
       .outline-btn { flex:1; padding:7px; border:1.5px solid #e2dce8; border-radius:8px; background:transparent; font-family:inherit; font-size:.76rem; font-weight:600; color:#040354; cursor:pointer; }
       .outline-btn:hover { border-color:#135BEC; color:#135BEC; }
-
-      /* DONATE */
       .donate-hero { background:linear-gradient(160deg,#040354 0%,#0a0a6e 50%,#135BEC 100%); padding:22px 16px 26px; color:#fff; text-align:center; }
       .donate-eyebrow { font-size:.73rem; color:rgba(255,255,255,.6); margin-bottom:4px; }
       .donate-amount { font-size:2.1rem; font-weight:800; letter-spacing:-.03em; margin-bottom:4px; }
@@ -846,8 +793,6 @@ export class MyElement extends LitElement {
       .sub-btn:hover { background:#040354; }
       .sub-btn:disabled { background:#9ca3af; cursor:not-allowed; }
       .secure-note { text-align:center; font-size:.68rem; color:#9ca3af; padding-bottom:16px; }
-
-      /* CAREER */
       .job-card { background:#fff; border-radius:14px; padding:14px; margin-bottom:10px; border:1px solid #e8eaf0; }
       .job-tags { display:flex; gap:6px; flex-wrap:wrap; align-items:center; margin:8px 0 10px; }
       .job-tag { font-size:.66rem; background:#f0f5ff; color:#135BEC; padding:3px 8px; border-radius:100px; font-weight:600; }
@@ -859,8 +804,6 @@ export class MyElement extends LitElement {
       .m-info { flex:1; min-width:0; }
       .a-batch { font-size:.65rem; color:#9ca3af; margin-bottom:2px; }
       .connect-btn { padding:7px 14px; background:#f0f5ff; color:#135BEC; border:1.5px solid #c7d7fb; border-radius:8px; font-family:inherit; font-size:.73rem; font-weight:700; cursor:pointer; flex-shrink:0; }
-
-      /* DOCS */
       .passport-card { background:#040354; border-radius:16px; padding:18px; color:#fff; margin-bottom:16px; }
       .pass-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; }
       .pass-official { font-size:.58rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,.5); }
@@ -881,8 +824,6 @@ export class MyElement extends LitElement {
       .cred-tag.prem { background:#fef3e2; color:#b45309; }
       .cred-tag.done { background:#f0fdf4; color:#16a34a; }
       .add-badge-btn { width:100%; margin-top:12px; margin-bottom:16px; padding:10px; background:transparent; border:1.5px dashed #c7d7fb; border-radius:10px; color:#135BEC; font-family:inherit; font-size:.8rem; font-weight:600; cursor:pointer; }
-
-      /* PROFILE */
       .profile-bar { display:flex; justify-content:space-between; align-items:center; padding:12px 16px; background:#fff; border-bottom:1px solid #e8eaf0; }
       .back-btn { background:none; border:none; font-family:inherit; font-size:.83rem; color:#135BEC; font-weight:600; cursor:pointer; }
       .profile-title { font-size:.78rem; font-weight:800; color:#040354; letter-spacing:.08em; }
@@ -897,15 +838,11 @@ export class MyElement extends LitElement {
       .pbadge.navy { background:#f0f0ff; color:#040354; }
       .logout-btn { width:100%; padding:12px; background:#fff; border:1.5px solid #E11D48; color:#E11D48; border-radius:10px; font-family:inherit; font-size:.87rem; font-weight:700; cursor:pointer; margin-bottom:16px; transition:all .2s; }
       .logout-btn:hover { background:#E11D48; color:#fff; }
-
-      /* BOTTOM NAV */
       .bottom-nav { position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:480px; background:#fff; border-top:1px solid #e8eaf0; display:flex; height:62px; z-index:20; }
       .tab-btn { flex:1; border:none; background:transparent; cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; padding:6px 0; }
       .tab-ico { font-size:1.1rem; }
       .tab-lbl { font-size:.57rem; font-weight:600; color:#9ca3af; }
       .tab-btn.active .tab-lbl { color:#135BEC; }
-
-      /* MODAL */
       .modal-bg { position:fixed; inset:0; background:rgba(4,3,84,.6); display:flex; align-items:flex-end; justify-content:center; z-index:100; }
       .modal { background:#fff; border-radius:24px 24px 0 0; padding:28px 20px 36px; width:100%; max-width:480px; text-align:center; }
       .modal-check { width:56px; height:56px; border-radius:50%; background:#040354; color:#fff; font-size:1.4rem; font-weight:700; display:flex; align-items:center; justify-content:center; margin:0 auto 12px; }
@@ -918,10 +855,9 @@ export class MyElement extends LitElement {
       .modal-share { width:100%; padding:12px; background:#f0f5ff; color:#135BEC; border:1.5px solid #c7d7fb; border-radius:10px; font-family:inherit; font-size:.87rem; font-weight:700; cursor:pointer; margin-bottom:8px; }
       .modal-close { width:100%; padding:12px; background:#040354; color:#fff; border:none; border-radius:10px; font-family:inherit; font-size:.87rem; font-weight:700; cursor:pointer; }
       .modal-close:hover { background:#135BEC; }
-
       @media (max-width:480px) { .row2 { grid-template-columns:1fr; } }
     `
   }
 }
 
-window.customElements.define('my-element', MyElement)
+customElements.define('my-element', MyElement);
